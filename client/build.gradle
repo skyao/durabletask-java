@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'com.microsoft'
-version = '1.5.0'
+version = '1.6.0-SNAPSHOT'
 archivesBaseName = 'durabletask-client'
 
 def grpcVersion = '1.59.0'
@@ -17,7 +17,8 @@ def jacksonVersion = '2.15.3'
 // When build on local, you need to set this value to your local jdk11 directory.
 // Java11 is used to compile and run all the tests.
 // Example for Windows:  C:/Program Files/Java/openjdk-11.0.12_7/
-def PATH_TO_TEST_JAVA_RUNTIME = "$System.env.JDK_11"
+// def PATH_TO_TEST_JAVA_RUNTIME = "$System.env.JDK_11"
+def PATH_TO_TEST_JAVA_RUNTIME = "/home/sky/.sdkman/candidates/java/current"
 
 dependencies {
 
@@ -144,10 +145,6 @@ publishing {
             }
         }
     }
-}
-
-signing {
-    sign publishing.publications.mavenJava
 }
 
 java {

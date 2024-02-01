@@ -6,6 +6,7 @@ import com.google.protobuf.StringValue;
 
 import com.microsoft.durabletask.implementation.protobuf.TaskHubSidecarServiceGrpc;
 import com.microsoft.durabletask.implementation.protobuf.OrchestratorService.*;
+import com.microsoft.durabletask.implementation.protobuf.OrchestratorService.GetWorkItemsRequest.Builder;
 import com.microsoft.durabletask.implementation.protobuf.OrchestratorService.WorkItem.RequestCase;
 import com.microsoft.durabletask.implementation.protobuf.TaskHubSidecarServiceGrpc.*;
 
@@ -96,6 +97,17 @@ public final class DurableTaskGrpcWorker implements AutoCloseable {
         return this.sidecarClient.getChannel().authority();
     }
 
+    private GetWorkItemsRequest buildGetWorkItemsRequest() {
+        Builder builder = GetWorkItemsRequest.newBuilder();
+        this.orchestrationFactories.forEach((k, v) -> {
+            System.out.println("**** versioning ****: send workflow revisions to sidecar: name="
+                    + k + ", revision=" + v.getRevision());
+            builder.putRevisions(k, v.getRevision());
+        });
+
+        return builder.build();
+    }
+
     /**
      * Establishes a gRPC connection to the sidecar and starts processing work-items on the current thread.
      * This method call blocks indefinitely, or until the current thread is interrupted.
@@ -122,7 +134,7 @@ public final class DurableTaskGrpcWorker implements AutoCloseable {
         // TODO: How do we interrupt manually?
         while (true) {
             try {
-                GetWorkItemsRequest getWorkItemsRequest = GetWorkItemsRequest.newBuilder().build();
+                GetWorkItemsRequest getWorkItemsRequest = buildGetWorkItemsRequest();
                 Iterator<WorkItem> workItemStream = this.sidecarClient.getWorkItems(getWorkItemsRequest);
                 while (workItemStream.hasNext()) {
                     WorkItem workItem = workItemStream.next();

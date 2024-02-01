@@ -568,4 +568,12 @@ public interface TaskOrchestrationContext {
      * Clears the orchestration's custom status.
      */
     void clearCustomStatus();
+
+    /**
+     * get and check revision of current workflow instance.
+     * 
+     * @return revision of current workflow instance
+     * @throws RuntimeException if the revision is not supported
+     */
+    int getAndCheckRevision();
 }

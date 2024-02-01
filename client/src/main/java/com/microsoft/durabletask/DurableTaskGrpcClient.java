@@ -112,6 +112,8 @@ final class DurableTaskGrpcClient extends DurableTaskClient {
 
         CreateInstanceRequest request = builder.build();
         CreateInstanceResponse response = this.sidecarClient.startInstance(request);
+        System.out.println("**** versioning ****: scheduled New Orchestration Instance: instanceId="
+                + response.getInstanceId() + ", revision=" + response.getRevision());
         return response.getInstanceId();
     }
 

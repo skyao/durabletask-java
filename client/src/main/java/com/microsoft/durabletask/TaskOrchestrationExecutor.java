@@ -76,6 +76,7 @@ final class TaskOrchestrationExecutor {
         private String orchestratorName;
         private String rawInput;
         private String instanceId;
+        private int revision;
         private Instant currentInstant;
         private boolean isComplete;
         private boolean isSuspended;
@@ -135,6 +136,16 @@ final class TaskOrchestrationExecutor {
         private void setInstanceId(String instanceId) {
             // TODO: Throw if instance ID is not null
             this.instanceId = instanceId;
+        }
+
+        @Override
+        public int getAndCheckRevision() {
+            // TODO: check revision later
+            return this.revision;
+        }
+
+        private void setRevision(int revision) {
+            this.revision = revision;
         }
 
         @Override
@@ -837,6 +848,8 @@ final class TaskOrchestrationExecutor {
                         this.setName(name);
                         String instanceId = startedEvent.getOrchestrationInstance().getInstanceId();
                         this.setInstanceId(instanceId);
+                        int revision = startedEvent.getOrchestrationInstance().getRevision();
+                        this.setRevision(revision);
                         String input = startedEvent.getInput().getValue();
                         this.setInput(input);
                         TaskOrchestrationFactory factory = TaskOrchestrationExecutor.this.orchestrationFactories.get(name);
